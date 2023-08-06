@@ -24,9 +24,9 @@ In all likelyhood you are looking to hook up a single CAN toolhead board to your
 In order to achieve a functioning CAN network on your printer you need 3 things: A computer running the main Klipper software (usually a Raspberry Pi, but anything with a USB port will work for this guide), a CAN network adapter (either a standalone USB device or running a compatible mainboard in klipper's usb-can bridge mode) and a CAN node (the toolhead device). This is also the order in which you need to set things up. No point setting everything up on the toolhead CAN board if you don't have a way for the Pi to talk to it.
 We are going to assume you have a functioning Pi (or equivelant) running linux and already have Klippper, Moonraker, some sort of GUI (Fluidd/Mainsail/Octoprint), and you have the ability to SSH into it.
 
-# Regarding CAN***BOOT***
+# Regarding Katapult (formerly known as CAN***BOOT***)
 
-You may have seen other guides have installing CanBOOT onto devices as a first step. CanBOOT is a custom firmware and allows flashing of Klipper to the devices via the CAN network so you don't have to plug a USB cable in each time to flash/update klipper. CanBOOT is really handy but it is ***NOT*** mandatory. This will be discussed later, but Klipper will happily run over a CAN network with or without CanBOOT. 
+You may have seen other guides have installing Katapult (aka CanBOOT) onto devices as a first step. Katapult is a custom firmware and allows flashing of Klipper to the devices via the CAN network so you don't have to plug a USB cable in each time to flash/update klipper. Katapult is really handy but it is ***NOT*** mandatory. This will be discussed later, but Klipper will happily run over a CAN network with or without Katapult. 
 
 # can0 file, CAN Speeds, and Transmit Queue Length
 
