@@ -3,7 +3,7 @@
 
 # STM32G0B1
 
-## CanBOOT Config (note this just uses the default USB communication interface)
+## Katapult Config (note this just uses the default USB communication interface)
 ![image](https://user-images.githubusercontent.com/14154875/225157525-d1b8f813-ab11-4f59-87fa-45f8a3ee2a6a.png)
 
 
