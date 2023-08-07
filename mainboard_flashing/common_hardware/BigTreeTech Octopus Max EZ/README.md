@@ -1,4 +1,4 @@
-# CanBOOT Config
+# Katapult Config
 
 ![image](https://github.com/GeodesicCarbon/voron_canbus/assets/23384823/7288c90b-af59-4534-9f8b-73f0bba7246f)
 
