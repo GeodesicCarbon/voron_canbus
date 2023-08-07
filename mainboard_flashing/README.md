@@ -92,8 +92,7 @@ Once you have the firmware configured, run a `make clean` to make sure there are
 
 Run an `ls /dev/serial/by-id/` and take note of the Katapult device that it shows:
 
->**_NOTE:_** Replace image
-![image](https://user-images.githubusercontent.com/124253477/221342447-a98e6bee-050b-4f82-a4cb-1265e92d0752.png)
+![image](https://github.com/GeodesicCarbon/voron_canbus/assets/23384823/fc8109d7-2735-4750-a298-9da076994887)
 
 If the above command didn't show a 'katapult' device, or threw a "no such file or directory" error, then quickly double-click the RESET button on your mainboard and run the command again. Until you get a result from a `ls /dev/serial/by-id/` there is no point doing further steps below.
 
@@ -139,21 +138,28 @@ You can now run the Klipper canbus query to retrieve the canbus_uuid of your mai
 
 ![image](https://user-images.githubusercontent.com/124253477/221332914-c612d996-f9c3-444d-aa41-22b8eda96eba.png)
 
-Use this UUID in the [mcu] section of your printer.cfg in order for Klipper (on Pi) to connect to the mainboard.
+Use this UUID in the `[mcu]` section of your printer.cfg in order for Klipper (on Pi) to connect to the mainboard.
 
-
-
+```
+...
+[mcu]
+# comment line with 'serial:' out
+# serial:  /dev/serial/by-id/usb-Klipper_stm32h723xx_240025000D51313236343430-if00
+# insert line with 'canbus_uuid:'
+canbus_uuid: a396d68a95a3
+...
+```
 
 # UPDATING
 
 ## Updating Katapult
 
-You should never really have to update your Katapult on the mainboard. Even if you wish to change your CanBUS speeds you don't need to change Katapult **On the Mainboard** as it only communicates via USB and not via CAN.
+You should never really have to update your Katapult on the mainboard. Even if you wish to change your CAN bus speeds you don't need to change Katapult **On the Mainboard** as it only communicates via USB and not via CAN.
 
 However, if you need to update Katapult for whatever reason, then:  
-Change to your Katapult directory with `cd ~/katapult`  
+Change to your Katapult directory with `cd ~/katapult/`  
 then go into the Katapult firmware config menu with `make menuconfig`  
-This time **make sure "Build Katapul deployment application" is configured** with the properly bootloader offset (same as the "Application start offset" that is relevant for your mainboard). Make sure all the rest of your settings are correct for your mainboard.
+This time **make sure "Build Katapult deployment application" is configured** with the properly bootloader offset (same as the "Application start offset" that is relevant for your mainboard). Make sure all the rest of your settings are correct for your mainboard.
 
 ![image](https://github.com/GeodesicCarbon/voron_canbus/assets/23384823/bb4f395f-218e-40ff-8301-6c6fbd92a2ca)
 
@@ -165,41 +171,41 @@ If you already have a functioning CAN setup, and your `[mcu] canbus_uuid` is in 
 
 `python3 ~/katapult/scripts/flashtool.py -i can0 -u yourmainboarduuid -r`
 
-![image](https://user-images.githubusercontent.com/124253477/223303347-385ec07c-5211-42d3-b985-4dc38c2864ec.png)
+![image](https://github.com/GeodesicCarbon/voron_canbus/assets/23384823/fda88fdf-914d-4f15-bbc3-bc021503b322)
 
-If you don't have the UUID (or something has gone wrong with the klipper firmware and your mainboard is hung) then you can also double-press the RESET button on your mainboard to force CanBOOT to reboot into canboot mode.
+If you don't have the UUID (or something has gone wrong with the klipper firmware and your mainboard is hung) then you can also double-press the RESET button on your mainboard to force Katapult to reboot into the bootloader mode.
 
-You can verify it is in the proper mode by running `ls /dev/serial/by-id`. If you see a "usb-CanBoot-......" device then it is good to go.
+You can verify it is in the proper mode by running `ls /dev/serial/by-id`. If you see a "usb-katapult-..." device then it is good to go.
 
-![image](https://user-images.githubusercontent.com/124253477/223303596-f7709d3c-d652-401c-959d-560381a39cff.png)
+![image](https://github.com/GeodesicCarbon/voron_canbus/assets/23384823/fc8109d7-2735-4750-a298-9da076994887)
 
 Once you are at this stage you can flash the deployer.bin by running:
 
-`python3 ~/CanBoot/scripts/flash_can.py -f ~/CanBoot/out/deployer.bin -d /dev/serial/by-id/usb-CanBoot_stm32f446xx_37001A001851303439363932-if00`
+`python3 ~/katapult/scripts/flashtool.py -f ~/katapult/out/deployer.bin -d /dev/serial/by-id/usb-katapult_...`
 
-and your CanBoot should update.
+and your Katapult should update.
 
-![image](https://user-images.githubusercontent.com/124253477/223303940-e7c19b00-04bb-47b3-9230-458e9f2de251.png)
+![image](https://github.com/GeodesicCarbon/voron_canbus/assets/23384823/2be801f8-49c1-4444-a917-054f6a4652db)
 
-## Updating Klipper Firmware via CanBOOT
+## Updating Klipper Firmware via Katapult
 
-To update Klipper, first compile the new Klipper firmware by running the same way you did in the "Installing USB-CAN-Bridge Klipper" section above, but with your new settings (if you are changing settings). Then you need to get CanBOOT back into canboot mode.
+To update Klipper, first compile the new Klipper firmware by running the same way you did in the "Installing USB-CAN-Bridge Klipper" section above, but with your new settings (if you are changing settings). Then you need to get Katapult back into bootloader mode.
 
-If you already have a functioning CAN setup, and your [mcu] canbus_uuid is in your printer.cfg, then you can force CanBOOT to reboot into canboot mode by running:
+If you already have a functioning CAN setup, and your `[mcu] canbus_uuid` is in your `printer.cfg`, then you can force Katapult to reboot into bootloader mode by running:
 
-`python3 ~/CanBoot/scripts/flash_can.py -i can0 -u yourmainboarduuid -r`
+`python3 ~/katapult/scripts/flashtool.py -i can0 -u yourmainboarduuid -r`
 
-![image](https://user-images.githubusercontent.com/124253477/223303347-385ec07c-5211-42d3-b985-4dc38c2864ec.png)
+![image](https://github.com/GeodesicCarbon/voron_canbus/assets/23384823/fda88fdf-914d-4f15-bbc3-bc021503b322)
 
-If you don't have the UUID (or something has gone wrong with the klipper firmware and your mainboard is hung) then you can also double-press the RESET button on your mainboard to force CanBOOT to reboot into canboot mode.
+If you don't have the UUID (or something has gone wrong with the klipper firmware and your mainboard is hung) then you can also double-press the RESET button on your mainboard to force Katapult to reboot into the bootloader mode.
 
-You can verify it is in the proper mode by running `ls /dev/serial/by-id`. If you see a "usb-CanBoot-......" device then it is good to go.
+You can verify it is in the proper mode by running `ls /dev/serial/by-id`. If you see a "usb-katapult-..." device then it is good to go.
 
-![image](https://user-images.githubusercontent.com/124253477/223303596-f7709d3c-d652-401c-959d-560381a39cff.png)
+![image](https://github.com/GeodesicCarbon/voron_canbus/assets/23384823/fc8109d7-2735-4750-a298-9da076994887)
 
 Then you can run the same command you used to initially flash Klipper:
 
-`python3 ~/CanBoot/scripts/flash_can.py -f ~/klipper/out/klipper.bin -d /dev/serial/by-id/usb-CanBoot_stm32f446xx_37001A001851303439363932-if00`
+`python3 ~/katapult/scripts/flashtool.py -f ~/klipper/out/klipper.bin -d /dev/serial/by-id/usb-katapult_...`
 
 ## Updating Klipper Firmware via other methods
 
